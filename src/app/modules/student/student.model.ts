@@ -78,6 +78,12 @@ const studentSchema = new Schema<TStuedent, StudentModel>(
       required: [true, 'Password is Required'],
       maxlength: [20, 'Password can not be more than 20 characters'],
     },
+    user: {
+      type: Schema.Types.ObjectId,
+      required: [true, 'Id is Required'],
+      unique: true,
+      ref: 'User',
+    },
     name: {
       type: userNameSchema,
       required: [true, 'Student Name is Required'],
@@ -128,11 +134,7 @@ const studentSchema = new Schema<TStuedent, StudentModel>(
       type: localGuadianSchema,
       required: [true, 'Local Guardian Information is Required'],
     },
-    isActive: {
-      type: String,
-      enum: ['active', 'block'],
-      default: 'active',
-    },
+
     isDeleted: {
       type: Boolean,
       default: false,

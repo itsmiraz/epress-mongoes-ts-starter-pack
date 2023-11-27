@@ -1,15 +1,5 @@
 import { Student } from './student.model';
-import { TLocalGuardian, TStuedent } from './student.interface';
-
-const createStudentintoDb = async (studentData: TStuedent) => {
-  if (await Student.isUserExists(studentData.id)) {
-    throw new Error('User Already Exists');
-  }
-  // Build in static Method
-  const result = await Student.create(studentData);
-
-  return result;
-};
+import { TLocalGuardian } from './student.interface';
 
 const getAllStudentsFromDB = async () => {
   const result = await Student.find({});
@@ -33,7 +23,6 @@ const delteStudentFromDb = async (id: string) => {
 };
 
 const updateLocalGuardianData = async (id: string, data: TLocalGuardian) => {
-  console.log(id, data);
   const student = Student.isUserExists(id);
 
   if (!student) {
@@ -55,7 +44,6 @@ const updateLocalGuardianData = async (id: string, data: TLocalGuardian) => {
 };
 
 export const StudentServices = {
-  createStudentintoDb,
   getAllStudentsFromDB,
   getSingleStudentFromDb,
   delteStudentFromDb,
