@@ -1,7 +1,13 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { UserServices } from './user.servicee';
+import sendResponse from '../../utils/sendResponse';
+import httpStatus from 'http-status';
 
-const createStudent = async (req: Request, res: Response) => {
+const createStudent = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     // creating a schema validation using zod
 
@@ -14,18 +20,14 @@ const createStudent = async (req: Request, res: Response) => {
       studentData,
     );
 
-    res.status(201).json({
+    sendResponse(res, {
+      statusCode: httpStatus.CREATED,
       success: true,
       message: 'Student is Created SuccessFully',
       data: result,
     });
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (err: any) {
-    res.status(400).json({
-      success: false,
-      message: err.message || 'Something Went Wrong',
-      data: err,
-    });
+  } catch (err) {
+    next(err);
   }
 };
 
