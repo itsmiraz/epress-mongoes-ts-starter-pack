@@ -16,6 +16,28 @@ const createAcademicSemister = catchAsync(async (req, res) => {
   });
 });
 
+const getAllAcademicSemisters = catchAsync(async (req, res) => {
+  const result = await AcademicSemisterServices.getAllAcademicSemistersFromDb();
+  res.status(200).json({
+    succuss: true,
+    message: 'Academic Semiseters are Successfully retrived',
+    data: result,
+  });
+});
+
+const getSingleAcademicSemister = catchAsync(async (req, res) => {
+  const semisterId = req.params.id;
+  const result =
+    await AcademicSemisterServices.getSingletAcademicSemisterFromDb(semisterId);
+  res.status(200).json({
+    succuss: true,
+    message: 'Here is your Academic Semister',
+    data: result,
+  });
+});
+
 export const AcademicSemisterControllers = {
   createAcademicSemister,
+  getAllAcademicSemisters,
+  getSingleAcademicSemister,
 };

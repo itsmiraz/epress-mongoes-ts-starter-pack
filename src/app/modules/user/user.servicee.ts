@@ -17,6 +17,11 @@ const createStudentintoDb = async (
   // set student role
   userData.role = 'student';
 
+  // yaar semister 4 digit number
+  // const generateStudentId = (payload: TAcademicSemister) => {
+
+  // }
+
   // Manually generated Id
   userData.id = '202310003';
 
