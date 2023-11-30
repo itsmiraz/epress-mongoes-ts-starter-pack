@@ -24,11 +24,11 @@ export type TLocalGuardian = {
 export type TStuedent = {
   id: string;
   user: Types.ObjectId;
- 
+
   name: TUserName;
   gender: 'Male' | 'Female';
   email: string;
-  dateOfBirth: string;
+  dateOfBirth: Date;
   contactNumber: string;
   emergencyContactNo: string;
   bloodGroup?: 'A+' | 'B+' | 'AB+' | 'O+';
