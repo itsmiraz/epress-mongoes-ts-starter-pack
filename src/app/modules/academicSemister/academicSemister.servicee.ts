@@ -12,6 +12,19 @@ const createAcademicSemisterintoDB = async (payload: TAcademicSemister) => {
   return result;
 };
 
+const getAllAcademicSemistersFromDb = async () => {
+  const result = await AcademicSemister.find({});
+  return result;
+};
+
+const getSingletAcademicSemisterFromDb = async (id: string) => {
+  const result = await AcademicSemister.findById(id);
+
+  return result;
+};
+
 export const AcademicSemisterServices = {
   createAcademicSemisterintoDB,
+  getAllAcademicSemistersFromDb,
+  getSingletAcademicSemisterFromDb,
 };
