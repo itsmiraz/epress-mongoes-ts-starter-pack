@@ -96,7 +96,7 @@ const studentSchema = new Schema<TStuedent, StudentModel>(
       required: [true, 'Gender is Required'],
     },
     dateOfBirth: {
-      type: Date,
+      type: String,
       required: [true, 'Date of Birth is Required'],
     },
     contactNumber: {
@@ -128,7 +128,7 @@ const studentSchema = new Schema<TStuedent, StudentModel>(
       type: localGuadianSchema,
       required: [true, 'Local Guardian Information is Required'],
     },
-    admissionSemister: {
+    admissionSemester: {
       type: Schema.Types.ObjectId,
       ref: 'AcademicSemister',
     },

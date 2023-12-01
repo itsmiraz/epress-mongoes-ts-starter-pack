@@ -1,13 +1,12 @@
 import config from '../../config';
+import { AcademicSemister } from '../academicSemister/academicSemister.model';
 import { TStuedent } from '../student/student.interface';
 import { Student } from '../student/student.model';
 import { TUser } from './user.interface';
 import { User } from './user.model';
+import { generateStudentId } from './user.utils';
 
-const createStudentintoDb = async (
-  password: string,
-  studentData: TStuedent,
-) => {
+const createStudentintoDb = async (password: string, payload: TStuedent) => {
   const userData: Partial<TUser> = {};
 
   // if passoword is not gived , use default password
@@ -18,12 +17,14 @@ const createStudentintoDb = async (
   userData.role = 'student';
 
   // yaar semister 4 digit number
-  // const generateStudentId = (payload: TAcademicSemister) => {
 
-  // }
+  // find academic semester info
+  const admissionSemister = await AcademicSemister.findById(
+    payload.admissionSemester,
+  );
 
   // Manually generated Id
-  userData.id = '202310003';
+  userData.id = await generateStudentId(admissionSemister);
 
   // Create a new user
   const newUser = await User.create(userData);
@@ -31,10 +32,10 @@ const createStudentintoDb = async (
   //create a student
   if (Object.keys(newUser).length) {
     // set id, _Id
-    studentData.id = newUser.id;
-    studentData.user = newUser._id; //referencing _ id
+    payload.id = newUser.id;
+    payload.user = newUser._id; //referencing _ id
 
-    const newStudent = await Student.create(studentData);
+    const newStudent = await Student.create(payload);
     return newStudent;
   }
 };
