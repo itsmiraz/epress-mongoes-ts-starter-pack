@@ -57,4 +57,24 @@ userSchema.post('save', function (doc, next) {
   next();
 });
 
+userSchema.pre('findOneAndUpdate', async function (next) {
+  const query = this.getQuery();
+  const isStudentExists = await User.findOne(query);
+
+  if (!isStudentExists) {
+    throw new Error('Student Does not Exist');
+  } else {
+    next();
+  }
+});
+userSchema.pre('updateOne', async function (next) {
+  const query = this.getQuery();
+  const isStudentExists = await User.findOne(query);
+
+  if (!isStudentExists) {
+    throw new Error('Student Does not Exist');
+  } else {
+    next();
+  }
+});
 export const User = model<TUser>('User', userSchema);

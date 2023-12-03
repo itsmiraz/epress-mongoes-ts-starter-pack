@@ -32,7 +32,7 @@ const deleteStudent = catchAsync(async (req, res) => {
 
 const updateStudentData = catchAsync(async (req, res) => {
   const studentId = req.params.id;
-  const studentData = req.body;
+  const studentData = req.body.student;
   const result = await StudentServices.updateLocalGuardianData(
     studentId,
     studentData,
