@@ -14,7 +14,7 @@ router.post(
 );
 
 router.get('/', AcademicDepartmentControllers.getAllAcademicDepartment);
-router.get('/:id', AcademicDepartmentControllers.getAllAcademicDepartment);
+router.get('/:id', AcademicDepartmentControllers.getSingleAcademicDepartment);
 router.patch(
   '/:departmentId',
   validateRequest(

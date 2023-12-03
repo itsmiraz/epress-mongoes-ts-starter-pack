@@ -2,6 +2,7 @@ import sendResponse from '../../utils/sendResponse';
 import httpStatus from 'http-status';
 import { catchAsync } from '../../utils/catchAsync';
 import { AcademicDepartmentServices } from './academicDepartment.servicee';
+import createError from '../../utils/createError';
 
 const createAcademicDepartment = catchAsync(async (req, res) => {
   const result =
@@ -25,12 +26,17 @@ const getAllAcademicDepartment = catchAsync(async (req, res) => {
   });
 });
 
-const getSingleAcademicSemister = catchAsync(async (req, res) => {
-  const semisterId = req.params.id;
+const getSingleAcademicDepartment = catchAsync(async (req, res, next) => {
+  const departmentId = req.params.id;
   const result =
     await AcademicDepartmentServices.getSingletAcademicDepartmentFromDb(
-      semisterId,
+      departmentId,
     );
+
+  if (!result) {
+    return next(createError(404, 'Could Not Found Department Details'));
+  }
+
   res.status(200).json({
     succuss: true,
     message: 'Here is your Academic Department',
@@ -54,7 +60,7 @@ const updateAcademicDepartment = catchAsync(async (req, res) => {
 
 export const AcademicDepartmentControllers = {
   createAcademicDepartment,
-  getSingleAcademicSemister,
+  getSingleAcademicDepartment,
   getAllAcademicDepartment,
   updateAcademicDepartment,
 };
