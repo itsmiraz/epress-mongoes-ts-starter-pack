@@ -1,8 +1,10 @@
 import { StudentServices } from './student.servicee';
 import { catchAsync } from '../../utils/catchAsync';
+import httpStatus from 'http-status';
 
 const getAllStudents = catchAsync(async (req, res) => {
-  const result = await StudentServices.getAllStudentsFromDB();
+  const query = req.query;
+  const result = await StudentServices.getAllStudentsFromDB(query);
   res.status(200).json({
     succuss: true,
     message: 'Students are Successfully retrived',
@@ -32,12 +34,12 @@ const deleteStudent = catchAsync(async (req, res) => {
 
 const updateStudentData = catchAsync(async (req, res) => {
   const studentId = req.params.id;
-  const studentData = req.body;
+  const studentData = req.body.student;
   const result = await StudentServices.updateLocalGuardianData(
     studentId,
     studentData,
   );
-  res.status(201).json({
+  res.status(httpStatus.OK).json({
     success: true,
     message: 'Student Data Updated SuccessFully',
     data: result,
