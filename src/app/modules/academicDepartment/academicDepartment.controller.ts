@@ -2,7 +2,7 @@ import sendResponse from '../../utils/sendResponse';
 import httpStatus from 'http-status';
 import { catchAsync } from '../../utils/catchAsync';
 import { AcademicDepartmentServices } from './academicDepartment.servicee';
-import createError from '../../utils/createError';
+import AppError from '../../errors/AppError';
 
 const createAcademicDepartment = catchAsync(async (req, res) => {
   const result =
@@ -26,7 +26,7 @@ const getAllAcademicDepartment = catchAsync(async (req, res) => {
   });
 });
 
-const getSingleAcademicDepartment = catchAsync(async (req, res, next) => {
+const getSingleAcademicDepartment = catchAsync(async (req, res) => {
   const departmentId = req.params.id;
   const result =
     await AcademicDepartmentServices.getSingletAcademicDepartmentFromDb(
@@ -34,7 +34,7 @@ const getSingleAcademicDepartment = catchAsync(async (req, res, next) => {
     );
 
   if (!result) {
-    return next(createError(404, 'Could Not Found Department Details'));
+    throw new AppError(404, 'Could Not Found Department Details');
   }
 
   res.status(200).json({
