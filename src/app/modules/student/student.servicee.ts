@@ -80,7 +80,32 @@ const updateLocalGuardianData = async (
     throw new Error('Student Does not Exists');
   }
 
-  const result = await Student.findOneAndUpdate({ id: id }, data);
+  const { name, Guardian, localGuardian, ...remainingStudentData } = data;
+
+  const modifiedData: Record<string, unknown> = {
+    ...remainingStudentData,
+  };
+
+  if (name && Object.keys(name).length) {
+    for (const [key, value] of Object.entries(name)) {
+      modifiedData[`name.${key}`] = value;
+    }
+  }
+  if (Guardian && Object.keys(Guardian).length) {
+    for (const [key, value] of Object.entries(Guardian)) {
+      modifiedData[`Guardian.${key}`] = value;
+    }
+  }
+  if (localGuardian && Object.keys(localGuardian).length) {
+    for (const [key, value] of Object.entries(localGuardian)) {
+      modifiedData[`localGuardian.${key}`] = value;
+    }
+  }
+
+  const result = await Student.findOneAndUpdate({ id: id }, modifiedData, {
+    new: true,
+    runValidators: true,
+  });
   return result;
 };
 

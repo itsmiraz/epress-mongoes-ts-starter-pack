@@ -1,5 +1,6 @@
 import { StudentServices } from './student.servicee';
 import { catchAsync } from '../../utils/catchAsync';
+import httpStatus from 'http-status';
 
 const getAllStudents = catchAsync(async (req, res) => {
   const result = await StudentServices.getAllStudentsFromDB();
@@ -37,7 +38,7 @@ const updateStudentData = catchAsync(async (req, res) => {
     studentId,
     studentData,
   );
-  res.status(201).json({
+  res.status(httpStatus.OK).json({
     success: true,
     message: 'Student Data Updated SuccessFully',
     data: result,
