@@ -12,6 +12,9 @@ app.use(cors());
 // Application Routes
 app.use('/api/v1', router);
 
+app.get('/test', (req: Request, res: Response) => {
+  res.send('Hello World!');
+});
 app.get('/', (req: Request, res: Response) => {
   res.send('Hello World!');
 });

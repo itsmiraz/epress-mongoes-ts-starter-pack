@@ -3,7 +3,8 @@ import { catchAsync } from '../../utils/catchAsync';
 import httpStatus from 'http-status';
 
 const getAllStudents = catchAsync(async (req, res) => {
-  const result = await StudentServices.getAllStudentsFromDB();
+  const query = req.query;
+  const result = await StudentServices.getAllStudentsFromDB(query);
   res.status(200).json({
     succuss: true,
     message: 'Students are Successfully retrived',
