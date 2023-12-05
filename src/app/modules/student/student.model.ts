@@ -6,6 +6,7 @@ import {
   TStuedent,
   TUserName,
 } from './student.interface';
+import AppError from '../../errors/AppError';
 
 const userNameSchema = new Schema<TUserName>({
   firstName: {
@@ -148,26 +149,17 @@ const studentSchema = new Schema<TStuedent, StudentModel>(
   },
 );
 
-// studentSchema.pre('findOneAndUpdate', async function (next) {
-//   const query = this.getQuery();
-//   const isStudentExists = await Student.findOne(query);
-
-//   if (!isStudentExists) {
-//     throw new Error('Student Does not Exist');
-//   } else {
-//     // next();
-//   }
-// });
-// studentSchema.pre('updateOne', async function (next) {
-//   const query = this.getQuery();
-//   const isStudentExists = await Student.findOne(query);
-
-//   if (!isStudentExists) {
-//     throw new Error('Student Does not Exist');
-//   } else {
-//     // next();
-//   }
-// });
+studentSchema.pre('save', async function (next) {
+  const isEmailExists = await Student.findOne({
+    email: this.email,
+  });
+  if (isEmailExists) {
+    console.log('ekhanei atkaise');
+    throw new AppError(403, ` This email (${this.email}) Already Exists`);
+  } else {
+    next();
+  }
+});
 
 studentSchema.pre('find', function (next) {
   this.find({ isDeleted: { $ne: true } });

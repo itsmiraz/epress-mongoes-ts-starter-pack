@@ -25,7 +25,10 @@ academicDepartmentSchema.pre('save', async function (next) {
     name: this.name,
   });
   if (isDepartmentExists) {
-    throw new AppError(403, 'This Property Already Exists');
+    throw new AppError(
+      403,
+      ` This Property Name (${this.name}) Already Exists`,
+    );
   } else {
     next();
   }
