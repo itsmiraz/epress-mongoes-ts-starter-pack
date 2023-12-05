@@ -4,9 +4,9 @@ import {
   TLocalGuardian,
   StudentModel,
   TStuedent,
-  TUserName,
 } from './student.interface';
 import AppError from '../../errors/AppError';
+import { TUserName } from '../../interfaces/global';
 
 const userNameSchema = new Schema<TUserName>({
   firstName: {
