@@ -12,6 +12,7 @@ import handleDuplicateError from '../errors/handleDuplicateError';
 import AppError from '../errors/AppError';
 
 const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
+  console.log(err);
   let statusCode = 500;
   let message = 'Something Went Wrong';
 
@@ -53,7 +54,6 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
       },
     ];
   } else if (err instanceof Error) {
-    message = err.message;
     errorSource = [
       {
         path: '',
@@ -66,6 +66,7 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
     success: false,
     message: message,
     errorSource,
+
     stack: config.NODE_ENV === 'development' ? err?.stack : null,
   });
 };

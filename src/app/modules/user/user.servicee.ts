@@ -53,10 +53,11 @@ const createStudentintoDb = async (password: string, payload: TStuedent) => {
     await session.commitTransaction();
     await session.endSession();
     return newStudent;
-  } catch (err) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (err: any) {
     await session.abortTransaction();
     await session.endSession();
-    throw new AppError(400, 'Failed to create user');
+    throw new Error(err);
   }
 };
 
