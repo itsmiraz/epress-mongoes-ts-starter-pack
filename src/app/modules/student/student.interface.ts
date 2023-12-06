@@ -1,4 +1,5 @@
 import { Model, Types } from 'mongoose';
+import { TUserName } from '../../interfaces/global';
 
 export type TGuardian = {
   fatherName: string;
@@ -9,11 +10,6 @@ export type TGuardian = {
   motherContact: string;
 };
 
-export type TUserName = {
-  firstName: string;
-  middleName: string;
-  lastName: string;
-};
 export type TLocalGuardian = {
   name: string;
   occupation: string;
