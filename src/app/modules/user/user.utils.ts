@@ -59,19 +59,11 @@ export const generateStudentId = async (payload: TAcademicSemister | null) => {
 
 export const generateFacultyId = async () => {
   let currentId = (0).toString();
-  console.log(currentId);
   const lastStudentId = await findLastFaculty();
-  console.log(lastStudentId);
-  // const lastStudentSemesterCode = lastStudentId?.substring(4, 6);
-  // const lastStudentSemesterYear = lastStudentId?.substring(0, 4);
-  // const currentSemisterCode = payload?.code;
-  // const currentYear = payload?.year;
 
   if (lastStudentId) {
     currentId = lastStudentId.substring(5);
-    console.log(currentId);
   }
-  console.log(currentId);
   let incrementId = (Number(currentId) + 1).toString().padStart(4, '0');
 
   incrementId = `F-${incrementId}`;

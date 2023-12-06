@@ -13,6 +13,11 @@ const createUserNameSchema = z.object({
   middleName: createStringSchema('Middle Name'),
   lastName: createStringSchema('Last Name'),
 });
+const updateUserNameSchema = z.object({
+  firstName: createStringSchema('First Name').optional(),
+  middleName: createStringSchema('Middle Name').optional(),
+  lastName: createStringSchema('Last Name').optional(),
+});
 
 const createFacultySchema = z.object({
   body: z.object({
@@ -37,19 +42,21 @@ const createFacultySchema = z.object({
 const updateFacultySchema = z.object({
   body: z.object({
     faculty: z.object({
-      name: createUserNameSchema,
-      gender: z.enum(['Male', 'Female']),
-      email: createStringSchema('Email'),
-      dateOfBirth: createStringSchema('Date of Birth'),
-      contactNumber: createStringSchema('Contact Number'),
-      emergencyContactNo: createStringSchema('Emergency Contact No'),
-      presentAddress: createStringSchema('Present Address'),
-      permanentAddress: createStringSchema('Permanent Address'),
-      academicDepartment: createStringSchema('Academic Department id'),
-      academicFacult: createStringSchema('Academic Faculty id'),
-      designation: createStringSchema('Designation'),
+      name: updateUserNameSchema.optional(),
+      gender: z.enum(['Male', 'Female']).optional(),
+      email: createStringSchema('Email').optional(),
+      dateOfBirth: createStringSchema('Date of Birth').optional(),
+      contactNumber: createStringSchema('Contact Number').optional(),
+      emergencyContactNo: createStringSchema('Emergency Contact No').optional(),
+      presentAddress: createStringSchema('Present Address').optional(),
+      permanentAddress: createStringSchema('Permanent Address').optional(),
+      academicDepartment: createStringSchema(
+        'Academic Department id',
+      ).optional(),
+      academicFacult: createStringSchema('Academic Faculty id').optional(),
+      designation: createStringSchema('Designation').optional(),
       profile: createStringSchema('Profile').optional(),
-      isDeleted: z.boolean(),
+      isDeleted: z.boolean().optional(),
     }),
   }),
 });

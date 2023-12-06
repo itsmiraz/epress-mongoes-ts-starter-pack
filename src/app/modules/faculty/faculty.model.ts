@@ -26,4 +26,13 @@ const FacultySchema = new Schema<TFaculty>({
   isDeleted: { type: Boolean, required: true },
 });
 
+FacultySchema.pre('find', function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+FacultySchema.pre('findOne', function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+
 export const Faculty = model<TFaculty>('Faculty', FacultySchema);
