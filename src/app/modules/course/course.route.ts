@@ -22,4 +22,4 @@ router.delete('/:id', CourseControllers.deleteCourse);
 //   AcademicFacultyControllers.updateAcademicFaculty,
 // );
 
-export const CourseRouter = router;
+export const CourseRoutes = router;
