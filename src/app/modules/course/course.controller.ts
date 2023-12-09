@@ -15,7 +15,7 @@ const createCourse = catchAsync(async (req, res) => {
 });
 
 const getAllCourses = catchAsync(async (req, res) => {
-  const result = await CourseServices.getAllCourseFromDb();
+  const result = await CourseServices.getAllCourseFromDb({});
   res.status(200).json({
     succuss: true,
     message: 'Courses are Successfully retrived',
@@ -43,9 +43,21 @@ const deleteCourse = catchAsync(async (req, res) => {
   });
 });
 
+const updateCourse = catchAsync(async (req, res) => {
+  const courseId = req.params.id;
+  const payload = req.body;
+  const result = await CourseServices.updateCourseIntoDb(courseId, payload);
+  res.status(httpStatus.OK).json({
+    success: true,
+    message: 'Course Has Benn Updated Updated SuccessFully',
+    data: result,
+  });
+});
+
 export const CourseControllers = {
   createCourse,
   getAllCourses,
   getSingleCourse,
   deleteCourse,
+  updateCourse,
 };
