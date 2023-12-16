@@ -80,7 +80,16 @@ const removeFacultiesFromCourse = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const getAssingedFacultiesIntoCourse = catchAsync(async (req, res) => {
+  const id = req.params.id;
 
+  const result = await CourseServices.getAssingedFacultiesIntoCourseFromDb(id);
+  res.status(httpStatus.OK).json({
+    success: true,
+    message: 'Assigned Faculties Retrieved SuccessFully',
+    data: result,
+  });
+});
 export const CourseControllers = {
   createCourse,
   getAllCourses,
@@ -89,4 +98,5 @@ export const CourseControllers = {
   assignFaculties,
   updateCourse,
   removeFacultiesFromCourse,
+  getAssingedFacultiesIntoCourse,
 };
