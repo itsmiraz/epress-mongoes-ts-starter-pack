@@ -14,6 +14,10 @@ router.post(
 router.get('/', CourseControllers.getAllCourses);
 router.get('/:id', CourseControllers.getSingleCourse);
 router.delete('/:id', CourseControllers.deleteCourse);
+router.get(
+  '/get-assinged-faculties/:id',
+  CourseControllers.getAssingedFacultiesIntoCourse,
+);
 router.patch(
   '/:id',
   validateRequest(CourseValidation.updatedCourseValidationSchema),
