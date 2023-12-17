@@ -1,10 +1,15 @@
 import express from 'express';
 import { semisterRegistrationControllers } from './semisterRegistration.controller';
+import validateRequest from '../../middlewares/validateRequest';
+import { SemesterRegistrationValidations } from './semisterRegistration.validation';
 
 const router = express.Router();
 
 router.post(
-  '/create',
+  '/create-semister-registration',
+  validateRequest(
+    SemesterRegistrationValidations.createSemesterRegistrationValidationSchema,
+  ),
   semisterRegistrationControllers.createsemisterRegistration,
 );
 
@@ -13,10 +18,7 @@ router.get(
   '/:id',
   semisterRegistrationControllers.getSinglesemisterRegistration,
 );
-router.patch(
-  '/:id',
-  semisterRegistrationControllers.updatesemisterRegistration,
-);
+router.put('/:id', semisterRegistrationControllers.updatesemisterRegistration);
 router.delete(
   '/:id',
   semisterRegistrationControllers.deletesemisterRegistration,

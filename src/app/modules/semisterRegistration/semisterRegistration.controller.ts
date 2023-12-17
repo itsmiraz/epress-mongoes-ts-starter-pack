@@ -8,14 +8,16 @@ const createsemisterRegistration = catchAsync(async (req, res) => {
 
   res.status(200).json({
     success: true,
-    message: 'semisterRegistration successfully created',
+    message: 'Semister Registration successfully created',
     data: result,
   });
 });
 
 const getAllsemisterRegistrations = catchAsync(async (req, res) => {
   const result =
-    await semisterRegistrationServices.getAllsemisterRegistrationsFromDb();
+    await semisterRegistrationServices.getAllsemisterRegistrationsFromDb(
+      req.query,
+    );
   res.status(200).json({
     success: true,
     message: 'semisterRegistrations successfully retrieved',
@@ -32,13 +34,13 @@ const getSinglesemisterRegistration = catchAsync(async (req, res) => {
 
   res.status(200).json({
     success: true,
-    message: 'Here is your semisterRegistration',
+    message: 'Here is your SemisterRegistration',
     data: result,
   });
 });
 
 const updatesemisterRegistration = catchAsync(async (req, res) => {
-  const { semisterRegistrationId } = req.params;
+  const semisterRegistrationId = req.params.id;
   const result =
     await semisterRegistrationServices.updatesemisterRegistrationIntoDB(
       semisterRegistrationId,

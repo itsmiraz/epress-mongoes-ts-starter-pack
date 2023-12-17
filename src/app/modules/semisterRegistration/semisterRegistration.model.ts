@@ -4,11 +4,11 @@ import { SemisterRegistrationStatus } from './semisterRegistration.constants';
 
 const semisterRegistrationSchema = new Schema<TSemisterRegistration>(
   {
-    academicSemister: {
+    academicSemester: {
       type: Schema.Types.ObjectId,
       required: true,
       unique: true,
-      ref: 'AcademicSemister',
+      ref: 'AcademicSemester',
     },
     status: {
       type: String,
