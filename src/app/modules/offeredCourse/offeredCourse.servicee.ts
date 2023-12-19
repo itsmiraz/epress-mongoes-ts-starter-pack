@@ -8,6 +8,7 @@ import { Course } from '../course/course.model';
 import { Faculty } from '../faculty/faculty.model';
 import httpStatus from 'http-status';
 import { hasTimeConflict } from './offeredCourse.utils';
+import { RegistrationStatus } from '../semisterRegistration/semisterRegistration.constants';
 
 const createofferedCourseIntoDB = async (payload: TOfferedCourse) => {
   const {
@@ -124,9 +125,55 @@ const getSingleofferedCourseFromDb = async (id: string) => {
 
 const updateofferedCourseIntoDB = async (
   id: string,
-  payload: Partial<TOfferedCourse>,
+  payload: Pick<TOfferedCourse, 'faculty' | 'days' | 'startTime' | 'endTime'>,
 ) => {
-  const result = await OfferedCourse.findOneAndUpdate({ _id: id }, payload, {
+  const { faculty, days, startTime, endTime } = payload;
+
+  const isOfferedCouresExists = await OfferedCourse.findById(id);
+
+  if (!isOfferedCouresExists) {
+    throw new AppError(404, 'Offered Coures not Found!');
+  }
+
+  const isFacultyExists = await Faculty.findById(faculty);
+
+  if (!isFacultyExists) {
+    throw new AppError(404, 'Faculty not Found!');
+  }
+
+  //get the schedules of the faculties
+  const semesterRegistration = isOfferedCouresExists.semesterRegistration;
+
+  const semesterRegistrationStatus =
+    await SemisterRegistration.findById(semesterRegistration);
+
+  if (semesterRegistrationStatus?.status !== RegistrationStatus.UPCOMING) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      `Offered course can not be updated because the semister registeration status is Upcoming`,
+    );
+  }
+
+  const assignedSchedules = await OfferedCourse.find({
+    semesterRegistration,
+    faculty,
+    days: { $in: days },
+  }).select('days startTime endTime');
+
+  const newSchedule = {
+    days,
+    startTime,
+    endTime,
+  };
+
+  if (hasTimeConflict(assignedSchedules, newSchedule)) {
+    throw new AppError(
+      httpStatus.CONFLICT,
+      `This Faculty is not available at that time Choose Any Other time or day!`,
+    );
+  }
+
+  const result = await OfferedCourse.findByIdAndUpdate(id, payload, {
     new: true,
   });
   return result;
