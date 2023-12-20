@@ -30,6 +30,9 @@ const createStudentintoDb = async (password: string, payload: TStuedent) => {
   const admissionSemister = await AcademicSemister.findById(
     payload.admissionSemester,
   );
+  if (!admissionSemister) {
+    throw new AppError(404, 'Academic Semister Not Found');
+  }
 
   const session = await mongoose.startSession();
 
