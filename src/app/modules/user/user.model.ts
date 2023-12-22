@@ -10,14 +10,23 @@ const userSchema = new Schema<TUser, UserModel>(
       required: true,
       unique: true,
     },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
     password: {
       type: String,
+      select: 0,
       required: [true, 'Password is Required'],
       maxlength: [20, 'Password can not be more than 20 characters'],
     },
     needsPasswordChanged: {
       type: Boolean,
       default: true,
+    },
+    passwordChangedAt: {
+      type: Date,
     },
     role: {
       type: String,
@@ -79,7 +88,15 @@ userSchema.pre('updateOne', async function (next) {
 });
 
 userSchema.statics.isUserExistsWithCustomId = async function (id: string) {
-  return await User.findOne({ id: id });
+  return await User.findOne({ id: id }).select('+password');
+};
+userSchema.statics.isJWTIssuedBeforePasswordChanged = function (
+  passwordChangedTimeStamp: Date,
+  jwtIssuedTimestamp: number,
+) {
+  const passwordChangedTime =
+    new Date(passwordChangedTimeStamp).getTime() / 1000;
+  return passwordChangedTime > jwtIssuedTimestamp;
 };
 
 userSchema.statics.isPasswordMatched = async function (
