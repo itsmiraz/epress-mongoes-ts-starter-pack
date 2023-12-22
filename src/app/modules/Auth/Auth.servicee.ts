@@ -7,6 +7,7 @@ import config from '../../config';
 import bcrypt from 'bcryptjs';
 import { createToken } from './Auth.utils';
 import jwt from 'jsonwebtoken';
+import { sendEmail } from '../../utils/sendEmail';
 const loginUser = async (payload: TLoginUser) => {
   const isUserExists = await User.isUserExistsWithCustomId(payload.id);
   if (!isUserExists) {
@@ -159,8 +160,53 @@ const refreshToken = async (token: string) => {
   };
 };
 
+const forgetPassword = async (id: string) => {
+  const user = await User.isUserExistsWithCustomId(id);
+  if (!user) {
+    throw new AppError(404, 'User Not Found');
+  }
+
+  const isUserDeleted = user.isDeleted;
+
+  if (isUserDeleted) {
+    throw new AppError(400, 'User has been Deleted');
+  }
+
+  const UserStatus = user.status;
+
+  if (UserStatus === 'blocked') {
+    throw new AppError(httpStatus.FORBIDDEN, 'User has been Blocked');
+  }
+  const jwtPayload = {
+    userId: user.id,
+    role: user.role,
+  };
+
+  const accessToken = createToken(
+    jwtPayload,
+    config.jwt_access_secret as string,
+    '10min',
+  );
+
+  const resetUILink = `${config.reset_pass_ui_link}?id=${user.id}&token=${accessToken}`;
+
+  const body = `
+  <div class="container">
+  <h2>Password Reset</h2>
+  <p>Hello There,</p>
+  <p>We received a request to reset your password. Click the button below to reset it:</p>
+  <a class="btn" href=${resetUILink}>Reset Password</a>
+  <p>If you didn't request a password reset, please ignore this email.</p>
+  <p>Thank you,</p>
+  <p>The PH Team</p>
+</div>`;
+
+  await sendEmail(user.email, 'Reset Your Password with In 10 min', body);
+};
+
 export const AuthServices = {
   loginUser,
   changePasswordIntoDb,
   refreshToken,
+  forgetPassword,
 };
