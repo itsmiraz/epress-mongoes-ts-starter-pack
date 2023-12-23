@@ -21,7 +21,7 @@ const updateUserNameSchema = z.object({
 
 const createFacultySchema = z.object({
   body: z.object({
-    password: z.string().min(6).max(20),
+    password: z.string().min(6).max(20).optional(),
     faculty: z.object({
       name: createUserNameSchema,
       gender: z.enum(['Male', 'Female']),
@@ -34,7 +34,7 @@ const createFacultySchema = z.object({
       academicDepartment: createStringSchema('Academic Department id'),
       academicFaculty: createStringSchema('Academic Faculty id'),
       designation: createStringSchema('Designation'),
-      profile: createStringSchema('Profile').optional(),
+      // profile: createStringSchema('Profile').optional(),
       isDeleted: z.boolean(),
     }),
   }),
