@@ -16,8 +16,14 @@ import { TFaculty } from '../faculty/faculty.interface';
 import { Faculty } from '../faculty/faculty.model';
 import { Admin } from '../admin/admin.model';
 import { JwtPayload } from 'jsonwebtoken';
+import { SendImagesToCloudniary } from '../../utils/sendImagesToCloudinary';
 
-const createStudentintoDb = async (password: string, payload: TStuedent) => {
+const createStudentintoDb = async (
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  file: any,
+  password: string,
+  payload: TStuedent,
+) => {
   const userData: Partial<TUser> = {};
 
   // if passoword is not gived , use default password
@@ -43,6 +49,13 @@ const createStudentintoDb = async (password: string, payload: TStuedent) => {
     // Automatically generated Id
     userData.id = await generateStudentId(admissionSemister);
 
+    const imageName = `${userData.id}_${payload?.name?.firstName}_profile`;
+
+    const profileImageData = await SendImagesToCloudniary(
+      imageName,
+      file?.path,
+    );
+
     // Transaction 1
     // Create a new user
     const newUser = await User.create([userData], { session });
@@ -54,7 +67,7 @@ const createStudentintoDb = async (password: string, payload: TStuedent) => {
     // set id, _Id
     payload.id = newUser[0].id;
     payload.user = newUser[0]._id; //referencing _ id
-
+    payload.profile = (profileImageData as { secure_url: string }).secure_url;
     // Transaction 2
     const newStudent = await Student.create([payload], { session });
 
