@@ -189,7 +189,7 @@ const forgetPassword = async (id: string) => {
   );
 
   const resetUILink = `${config.reset_pass_ui_link}?id=${user.id}&token=${accessToken}`;
-
+  console.log(accessToken);
   const body = `
   <div class="container">
   <h2>Password Reset</h2>
@@ -204,9 +204,62 @@ const forgetPassword = async (id: string) => {
   await sendEmail(user.email, 'Reset Your Password with In 10 min', body);
 };
 
+const resetPassoword = async (
+  payload: { id: string; newPassword: string },
+  token: string,
+) => {
+  const user = await User.isUserExistsWithCustomId(payload.id);
+  if (!user) {
+    throw new AppError(404, 'User Not Found');
+  }
+
+  const isUserDeleted = user.isDeleted;
+
+  if (isUserDeleted) {
+    throw new AppError(400, 'User has been Deleted');
+  }
+
+  const UserStatus = user.status;
+
+  if (UserStatus === 'blocked') {
+    throw new AppError(httpStatus.FORBIDDEN, 'User has been Blocked');
+  }
+  const decoded = jwt.verify(
+    token,
+    config.jwt_access_secret as string,
+  ) as JwtPayload;
+  if (decoded.userId !== payload.id) {
+    throw new AppError(httpStatus.FORBIDDEN, 'You are forbidden');
+  }
+
+  // hash new Pass
+  const newHashedPassword = await bcrypt.hash(
+    payload.newPassword,
+    Number(config.bcrypt_salt_round),
+  );
+
+  await User.findOneAndUpdate(
+    {
+      id: payload.id,
+      role: decoded.role,
+    },
+    {
+      password: newHashedPassword,
+      needsPasswordChanged: false,
+      passwordChangedAt: new Date(),
+    },
+  );
+  return null;
+};
+
+// http://localhost:3000/?id=A-0001&token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJBLTAwMDEiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MDMzMDQ2MDksImV4cCI6MTcwMzMwNTIwOX0.4tBTbGiytwnXP3f-cMxRROBtNedcL_jj8OS6ysT52lE
+
+// http://localhost:3000/?id=A-0001&token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJBLTAwMDEiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MDMzMDQ2MDksImV4cCI6MTcwMzMwNTIwOX0.4tBTbGiytwnXP3f-cMxRROBtNedcL_jj8OS6ysT52lE
+
 export const AuthServices = {
   loginUser,
   changePasswordIntoDb,
   refreshToken,
   forgetPassword,
+  resetPassoword,
 };

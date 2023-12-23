@@ -38,10 +38,21 @@ const forgetPasswordSchema = z.object({
     }),
   }),
 });
+const resetPassword = z.object({
+  body: z.object({
+    id: z.string({
+      required_error: 'User Id is must Required',
+    }),
+    newPassword: z.string({
+      required_error: 'New Password is  Required',
+    }),
+  }),
+});
 
 export const LoginValidations = {
   loginValidationSchema,
   changePasswordValidation,
   refreshTokenValidationSchema,
   forgetPasswordSchema,
+  resetPassword,
 };

@@ -56,10 +56,22 @@ const forgetPassword = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const resetPassword = catchAsync(async (req, res) => {
+  const token = req.headers.authorization;
+
+  const result = await AuthServices.resetPassoword(req.body, token as string);
+
+  res.status(200).json({
+    success: true,
+    message: 'Password Reseted successfully ',
+    data: result,
+  });
+});
 
 export const AuthControllers = {
   loginUser,
   changePassword,
   refreshToken,
   forgetPassword,
+  resetPassword,
 };
