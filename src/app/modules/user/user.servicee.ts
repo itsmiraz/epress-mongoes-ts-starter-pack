@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import mongoose from 'mongoose';
 import config from '../../config';
 import { AcademicSemister } from '../academicSemister/academicSemister.model';
@@ -85,7 +86,11 @@ const createStudentintoDb = async (
     throw new Error(err);
   }
 };
-const createFcaultyintoDb = async (password: string, payload: TFaculty) => {
+const createFcaultyintoDb = async (
+  file: any,
+  password: string,
+  payload: TFaculty,
+) => {
   const userData: Partial<TUser> = {};
 
   // if passoword is not gived , use default password
@@ -108,6 +113,13 @@ const createFcaultyintoDb = async (password: string, payload: TFaculty) => {
     // Automatically generated Id
     userData.id = await generateFacultyId();
 
+    const imageName = `${userData.id}_${payload?.name?.firstName}_profile`;
+
+    const profileImageData = await SendImagesToCloudniary(
+      imageName,
+      file?.path,
+    );
+
     // Transaction 1
     // Create a new user
     const newUser = await User.create([userData], { session });
@@ -119,6 +131,7 @@ const createFcaultyintoDb = async (password: string, payload: TFaculty) => {
     // set id, _Id
     payload.id = newUser[0].id;
     payload.user = newUser[0]._id; //referencing _ id
+    payload.profile = (profileImageData as { secure_url: string }).secure_url;
 
     // Transaction 2
     const newStudent = await Faculty.create([payload], { session });
@@ -137,7 +150,11 @@ const createFcaultyintoDb = async (password: string, payload: TFaculty) => {
     throw new Error(err);
   }
 };
-const createAdminIntoDb = async (password: string, payload: TFaculty) => {
+const createAdminIntoDb = async (
+  file: any,
+  password: string,
+  payload: TFaculty,
+) => {
   const userData: Partial<TUser> = {};
 
   // if passoword is not gived , use default password
@@ -154,7 +171,12 @@ const createAdminIntoDb = async (password: string, payload: TFaculty) => {
     session.startTransaction();
     // Automatically generated Id
     userData.id = await generateAdminId();
+    const imageName = `${userData.id}_${payload?.name?.firstName}_profile`;
 
+    const profileImageData = await SendImagesToCloudniary(
+      imageName,
+      file?.path,
+    );
     // Transaction 1
     // Create a new user
     const newUser = await User.create([userData], { session });
@@ -166,6 +188,7 @@ const createAdminIntoDb = async (password: string, payload: TFaculty) => {
     // set id, _Id
     payload.id = newUser[0].id;
     payload.user = newUser[0]._id; //referencing _ id
+    payload.profile = (profileImageData as { secure_url: string }).secure_url;
 
     // Transaction 2
     const newStudent = await Admin.create([payload], { session });

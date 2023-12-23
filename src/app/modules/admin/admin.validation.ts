@@ -21,7 +21,7 @@ const updateUserNameSchema = z.object({
 
 const createAdminValidationSchema = z.object({
   body: z.object({
-    password: z.string().min(6).max(20),
+    password: z.string().min(6).max(20).optional(),
     admin: z.object({
       name: createUserNameSchema,
       gender: z.enum(['Male', 'Female']),
@@ -33,7 +33,7 @@ const createAdminValidationSchema = z.object({
       permanentAddress: createStringSchema('Permanent Address'),
       managementDepartment: createStringSchema('Management Department'),
       designation: createStringSchema('Designation'),
-      profile: createStringSchema('Profile').optional(),
+      // profile: createStringSchema('Profile').optional(),
       isDeleted: z.boolean(),
     }),
   }),
