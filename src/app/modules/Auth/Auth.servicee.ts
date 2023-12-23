@@ -5,7 +5,7 @@ import { TLoginUser } from './Auth.interface';
 import { JwtPayload } from 'jsonwebtoken';
 import config from '../../config';
 import bcrypt from 'bcryptjs';
-import { createToken } from './Auth.utils';
+import { createToken, verifyToken } from './Auth.utils';
 import jwt from 'jsonwebtoken';
 import { sendEmail } from '../../utils/sendEmail';
 const loginUser = async (payload: TLoginUser) => {
@@ -224,10 +224,7 @@ const resetPassoword = async (
   if (UserStatus === 'blocked') {
     throw new AppError(httpStatus.FORBIDDEN, 'User has been Blocked');
   }
-  const decoded = jwt.verify(
-    token,
-    config.jwt_access_secret as string,
-  ) as JwtPayload;
+  const decoded = verifyToken(token, config.jwt_access_secret as string);
   if (decoded.userId !== payload.id) {
     throw new AppError(httpStatus.FORBIDDEN, 'You are forbidden');
   }

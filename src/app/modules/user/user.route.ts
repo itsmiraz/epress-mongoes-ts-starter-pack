@@ -17,6 +17,7 @@ router.post(
 );
 router.post(
   '/create-faculty',
+  auth(USER_ROLE.admin),
   validateRequest(FacultyValidationShcemas.createFacultySchema),
   UserController.createFaculty,
 );
@@ -24,6 +25,12 @@ router.post(
   '/create-admin',
   validateRequest(AdminValidationShcemas.createAdminValidationSchema),
   UserController.createAdmin,
+);
+router.get(
+  '/me',
+  auth('admin', 'faculty', 'student'),
+
+  UserController.getMe,
 );
 
 export const UserRoutes = router;
