@@ -1,9 +1,19 @@
 import express from 'express';
 import { EnrolledCourseControllers } from './EnrolledCourse.controller';
+import validateRequest from '../../middlewares/validateRequest';
+import { EnrolledCourseValidations } from './EnrolledCourse.validation';
+import auth from '../../middlewares/auth';
 
 const router = express.Router();
 
-router.post('/create', EnrolledCourseControllers.createEnrolledCourse);
+router.post(
+  '/create-enroll-course',
+  auth('student'),
+  validateRequest(
+    EnrolledCourseValidations.createEnrolledCourseValidationZodSchema,
+  ),
+  EnrolledCourseControllers.createEnrolledCourse,
+);
 
 router.get('/', EnrolledCourseControllers.getAllEnrolledCourses);
 router.get('/:id', EnrolledCourseControllers.getSingleEnrolledCourse);

@@ -1,7 +1,10 @@
 import { catchAsync } from '../../utils/catchAsync';
-import { EnrolledCourseServices } from './EnrolledCourse.service';
+import { EnrolledCourseServices } from './EnrolledCourse.servicee';
+
 const createEnrolledCourse = catchAsync(async (req, res) => {
+  const userId = req.user.userId;
   const result = await EnrolledCourseServices.createEnrolledCourseIntoDB(
+    userId,
     req.body,
   );
 

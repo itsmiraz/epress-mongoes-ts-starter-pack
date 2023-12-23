@@ -1,7 +1,10 @@
 import { TEnrolledCourse } from './EnrolledCourse.interface';
 import EnrolledCourse from './EnrolledCourse.model';
 
-const createEnrolledCourseIntoDB = async (payload: TEnrolledCourse) => {
+const createEnrolledCourseIntoDB = async (
+  userId: string,
+  payload: TEnrolledCourse,
+) => {
   const result = await EnrolledCourse.create(payload);
 
   return result;
