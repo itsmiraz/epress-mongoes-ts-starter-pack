@@ -15,6 +15,14 @@ router.post(
   EnrolledCourseControllers.createEnrolledCourse,
 );
 
+router.patch(
+  '/update-enrolled-course-marks',
+  auth('faculty'),
+  validateRequest(
+    EnrolledCourseValidations.updateEnrolledCourseMarksValidationZodSchema,
+  ),
+  EnrolledCourseControllers.updateEnrollCourseMarks,
+);
 router.get('/', EnrolledCourseControllers.getAllEnrolledCourses);
 router.get('/:id', EnrolledCourseControllers.getSingleEnrolledCourse);
 router.patch('/:id', EnrolledCourseControllers.updateEnrolledCourse);
