@@ -22,8 +22,7 @@ const getAllFacultiesFromDb = async (query: Record<string, unknown>) => {
 };
 
 const getSingleFacultyFromDb = async (id: string) => {
-  console.log(id);
-  const result = await Faculty.findOne({ id }).populate({
+  const result = await Faculty.findById(id).populate({
     path: 'academicDepartment',
     populate: {
       path: 'academicFaculty',

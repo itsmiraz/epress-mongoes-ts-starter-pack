@@ -17,13 +17,17 @@ const getAllCourseFromDb = async (query: Record<string, unknown>) => {
     query,
   )
     .search(CourseSearchAbleFields)
+    .paginate()
     .filter()
     .sort()
-    .paginate()
     .fields();
 
   const result = await coursQuery.modelQuery;
-  return result;
+  const meta = await coursQuery.countTotal();
+  return {
+    meta,
+    result,
+  };
 };
 
 const getSingleCourseFromDB = async (id: string) => {

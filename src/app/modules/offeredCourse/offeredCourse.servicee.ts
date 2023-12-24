@@ -113,7 +113,7 @@ const createofferedCourseIntoDB = async (payload: TOfferedCourse) => {
 };
 
 const getAllofferedCoursesFromDb = async () => {
-  const result = ''; // Your Business Logic
+  const result = await OfferedCourse.find({}); // Your Business Logic
   return result;
 };
 

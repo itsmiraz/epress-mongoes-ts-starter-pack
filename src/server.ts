@@ -30,6 +30,5 @@ process.on('unhandledRejection', () => {
 
 process.on('uncaughtException', () => {
   console.log(`😡 uncaughtException is Detected , shutting down...`);
-
   process.exit(1);
 });
