@@ -8,6 +8,7 @@ import mongoose from 'mongoose';
 import { SemisterRegistration } from '../semisterRegistration/semisterRegistration.model';
 import { Course } from '../course/course.model';
 import { Faculty } from '../faculty/faculty.model';
+import { calucalateGradeAndPoints } from './EnrolledCourse.utils';
 
 const createEnrolledCourseIntoDB = async (
   userId: string,
@@ -132,7 +133,7 @@ const updateEnrollCourseMarksIntoDb = async (
   facultyID: string,
   payload: Partial<TEnrolledCourse>,
 ) => {
-  const { offeredCourse, semesterRegistration, student } = payload;
+  const { offeredCourse, semesterRegistration, student, courseMarks } = payload;
 
   const isOfferedCourseExits = await OfferedCourse.findById(offeredCourse);
   if (!isOfferedCourseExits) {
@@ -150,12 +151,58 @@ const updateEnrollCourseMarksIntoDb = async (
   if (!isStudentExits) {
     throw new AppError(httpStatus.NOT_FOUND, 'Student Not Found');
   }
-  const isFacultyExits = await Faculty.findById(facultyID);
-  if (!isFacultyExits) {
+  const faculty = await Faculty.findOne({ id: facultyID }, { _id: 1 });
+  if (!faculty) {
     throw new AppError(httpStatus.NOT_FOUND, 'Faculty Not Found');
   }
 
-  const result = ''; // Your Business Logic
+  const isCourseBelongToFaculty = await EnrolledCourse.findOne({
+    semesterRegistration,
+    offeredCourse,
+    student,
+    faculty: faculty?._id,
+  });
+
+  if (!isCourseBelongToFaculty) {
+    throw new AppError(httpStatus.FORBIDDEN, 'You are Forbidden');
+  }
+
+  const modifiedData: Record<string, unknown> = {
+    ...courseMarks,
+  };
+
+  if (courseMarks?.finalTerm) {
+    const { classTest1, classTest2, midTerm, finalTerm } =
+      isCourseBelongToFaculty.courseMarks;
+
+    const totalMarks =
+      Math.ceil(classTest1 * 0.1) +
+      Math.ceil(midTerm * 0.3) +
+      Math.ceil(classTest2 * 0.1) +
+      Math.ceil(finalTerm * 0.5);
+
+    const result = calucalateGradeAndPoints(totalMarks);
+
+    modifiedData.grade = result.grade;
+    modifiedData.gradePoints = result.gradePoints;
+    modifiedData.isCompleted = true;
+  }
+
+  if (courseMarks && Object.keys(courseMarks).length) {
+    for (const [key, value] of Object.entries(courseMarks)) {
+      modifiedData[`courseMarks.${key}`] = value;
+    }
+  }
+
+  const result = await EnrolledCourse.findByIdAndUpdate(
+    isCourseBelongToFaculty._id,
+    modifiedData,
+    {
+      new: true,
+    },
+  );
+
+  // Your Business Logic
   return result;
 };
 const getAllEnrolledCoursesFromDb = async () => {
