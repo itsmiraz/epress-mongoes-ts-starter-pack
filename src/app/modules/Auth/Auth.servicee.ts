@@ -118,8 +118,12 @@ const refreshToken = async (token: string) => {
     token,
     config.jwt_refresh_secret as string,
   ) as JwtPayload;
-  const { userId, iat } = decoded;
 
+  if (!decoded) {
+    throw new AppError(httpStatus.UNAUTHORIZED, 'You are not Authorized');
+  }
+
+  const { userId, iat } = decoded;
   const user = await User.isUserExistsWithCustomId(userId);
   if (!user) {
     throw new AppError(404, 'User Not Found');
