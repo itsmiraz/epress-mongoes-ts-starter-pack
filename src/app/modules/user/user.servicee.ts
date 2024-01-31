@@ -111,12 +111,15 @@ const createFcaultyintoDb = async (
   userData.role = 'faculty';
   userData.email = payload.email;
 
-  // find academic semester info
-  // const admissionSemister = await AcademicSemister.findById(
-  //   payload.admissionSemester,
-  // );
-
   const session = await mongoose.startSession();
+
+  const academicDepartment = await AcademicDepartment.findById(
+    payload.academicDepartment,
+  );
+  if (!academicDepartment) {
+    throw new AppError(404, 'Academic Department Not Found');
+  }
+  payload.academicFaculty = academicDepartment.academicFaculty;
 
   try {
     session.startTransaction();
@@ -146,15 +149,15 @@ const createFcaultyintoDb = async (
     payload.user = newUser[0]._id; //referencing _ id
 
     // Transaction 2
-    const newStudent = await Faculty.create([payload], { session });
+    const newFaculty = await Faculty.create([payload], { session });
 
-    if (!newStudent) {
+    if (!newFaculty) {
       throw new AppError(httpStatus.BAD_REQUEST, 'Failded to create Faculty');
     }
 
     await session.commitTransaction();
     await session.endSession();
-    return newStudent;
+    return newFaculty;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     await session.abortTransaction();
