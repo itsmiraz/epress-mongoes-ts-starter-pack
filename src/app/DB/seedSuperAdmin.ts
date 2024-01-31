@@ -6,14 +6,14 @@ const SuperAdminData = {
   id: '00000',
   email: 'miraj!2@gmail.com',
   password: config.super_admin_pass,
-  role: USER_ROLE.super_admin,
+  role: USER_ROLE.superAdmin,
   status: 'in-progress',
   isDeleted: false,
 };
 
 const seedSuperAdmin = async () => {
   const isSuperAdminExists = await User.findOne({
-    role: USER_ROLE.super_admin,
+    role: USER_ROLE.superAdmin,
   });
 
   if (!isSuperAdminExists) {

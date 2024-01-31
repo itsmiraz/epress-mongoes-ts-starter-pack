@@ -8,6 +8,7 @@ const router = express.Router();
 
 router.post(
   '/create-academic-semister',
+  auth('superAdmin', 'admin'),
   validateRequest(
     AcademicSemisterValidations.createAcademicSemisterValidationSchema,
   ),

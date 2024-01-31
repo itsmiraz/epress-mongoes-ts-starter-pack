@@ -21,7 +21,11 @@ const adminSchema = new Schema<TAdmin>({
   permanentAddress: { type: String, required: true },
   managementDepartment: { type: Schema.Types.ObjectId, required: true },
   designation: { type: String, required: true },
-  profile: { type: String },
+  profile: {
+    type: String,
+    default:
+      'https://static.vecteezy.com/system/resources/thumbnails/009/734/564/small/default-avatar-profile-icon-of-social-media-user-vector.jpg',
+  },
   isDeleted: { type: Boolean, required: true },
 });
 
