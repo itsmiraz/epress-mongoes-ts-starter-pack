@@ -120,7 +120,11 @@ const studentSchema = new Schema<TStuedent, StudentModel>(
       type: String,
       required: [true, 'Permanent Address is Required'],
     },
-    profile: { type: String },
+    profile: {
+      type: String,
+      default:
+        'https://static.vecteezy.com/system/resources/thumbnails/009/734/564/small/default-avatar-profile-icon-of-social-media-user-vector.jpg',
+    },
     Guardian: {
       type: guradianSchema,
       required: [true, 'Guardian Information is Required'],
@@ -136,6 +140,10 @@ const studentSchema = new Schema<TStuedent, StudentModel>(
     academicDepartment: {
       type: Schema.Types.ObjectId,
       ref: 'AcademicDepartment',
+    },
+    academicFaculty: {
+      type: Schema.Types.ObjectId,
+      ref: 'AcademicFaculty',
     },
     isDeleted: {
       type: Boolean,
