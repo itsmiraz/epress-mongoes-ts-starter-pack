@@ -24,6 +24,10 @@ router.patch(
   EnrolledCourseControllers.updateEnrollCourseMarks,
 );
 router.get('/', EnrolledCourseControllers.getAllEnrolledCourses);
+router.get(
+  '/get-my-enrolled-courses',
+  EnrolledCourseControllers.getmyEnrolledCourses,
+);
 router.get('/:id', EnrolledCourseControllers.getSingleEnrolledCourse);
 router.patch('/:id', EnrolledCourseControllers.updateEnrolledCourse);
 router.delete('/:id', EnrolledCourseControllers.deleteEnrolledCourse);

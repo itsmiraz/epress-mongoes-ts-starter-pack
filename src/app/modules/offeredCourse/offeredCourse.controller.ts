@@ -24,7 +24,10 @@ const getAllofferedCourses = catchAsync(async (req, res) => {
 });
 const getMyOfferedCourses = catchAsync(async (req, res) => {
   const userId = req.user.userId;
-  const result = await offeredCourseServices.getMyOfferedCourseFromDb(userId);
+  const result = await offeredCourseServices.getMyOfferedCourseFromDb(
+    userId,
+    req.query,
+  );
   res.status(200).json({
     success: true,
     message: 'offeredCourses successfully retrieved',
