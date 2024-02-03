@@ -155,6 +155,7 @@ const assingFacultiesWithCourseIntoDb = async (
   );
   return result;
 };
+
 const removeFacultiesFromCourseIntoDb = async (
   id: string,
   payload: TCourseFaculty,
