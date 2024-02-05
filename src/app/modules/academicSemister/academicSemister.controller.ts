@@ -17,11 +17,15 @@ const createAcademicSemister = catchAsync(async (req, res) => {
 });
 
 const getAllAcademicSemisters = catchAsync(async (req, res) => {
-  const result = await AcademicSemisterServices.getAllAcademicSemistersFromDb();
-  res.status(200).json({
-    succuss: true,
-    message: 'Academic Semiseters are Successfully retrived',
-    data: result,
+  const result = await AcademicSemisterServices.getAllAcademicSemistersFromDb(
+    req.query,
+  );
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Semesters are Successfully retrived',
+    data: result.result,
+    meta: result.meta,
   });
 });
 
