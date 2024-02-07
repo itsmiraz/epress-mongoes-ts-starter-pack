@@ -1,14 +1,18 @@
 import { StudentServices } from './student.servicee';
 import { catchAsync } from '../../utils/catchAsync';
 import httpStatus from 'http-status';
+import sendResponse from '../../utils/sendResponse';
 
 const getAllStudents = catchAsync(async (req, res) => {
   const query = req.query;
   const result = await StudentServices.getAllStudentsFromDB(query);
-  res.status(200).json({
-    succuss: true,
+
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
     message: 'Students are Successfully retrived',
-    data: result,
+    meta: result.meta,
+    data: result.result,
   });
 });
 
