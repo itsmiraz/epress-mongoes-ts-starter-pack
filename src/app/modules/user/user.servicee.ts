@@ -88,7 +88,7 @@ const createStudentintoDb = async (
 
     await session.commitTransaction();
     await session.endSession();
-    return newStudent;
+    return newStudent[0];
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     await session.abortTransaction();
