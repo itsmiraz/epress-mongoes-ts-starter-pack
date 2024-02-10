@@ -1,4 +1,5 @@
 import { catchAsync } from '../../utils/catchAsync';
+import sendResponse from '../../utils/sendResponse';
 import { semisterRegistrationServices } from './semisterRegistration.servicee';
 const createsemisterRegistration = catchAsync(async (req, res) => {
   const result =
@@ -18,10 +19,13 @@ const getAllsemisterRegistrations = catchAsync(async (req, res) => {
     await semisterRegistrationServices.getAllsemisterRegistrationsFromDb(
       req.query,
     );
-  res.status(200).json({
+
+  sendResponse(res, {
+    statusCode: 200,
     success: true,
-    message: 'semisterRegistrations successfully retrieved',
-    data: result,
+    message: 'SemisterRegistrations successfully retrieved',
+    meta: result.meta,
+    data: result.result,
   });
 });
 
